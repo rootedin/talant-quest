@@ -50,7 +50,7 @@ private fun rememberNfcStatus(): NfcStatus {
 }
 
 @Composable
-fun MainScreen(vm: GameViewModel, onReset: () -> Unit) {
+fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
     val context = LocalContext.current
     val teamName by vm.teamName
     val rawTalant by vm.talant
@@ -67,7 +67,6 @@ fun MainScreen(vm: GameViewModel, onReset: () -> Unit) {
     val allFound = quizFound == vm.totalQuiz && codeFound == vm.totalCode
 
     val nfcStatus = rememberNfcStatus()
-    var showResetDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -78,14 +77,14 @@ fun MainScreen(vm: GameViewModel, onReset: () -> Unit) {
     ) {
         Spacer(Modifier.height(24.dp))
 
-        // 팀 이름 (길게 누르면 운영자 초기화)
+        // 팀 이름 (길게 누르면 관리자 모드)
         Text(
             teamName,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.pointerInput(Unit) {
-                detectTapGestures(onLongPress = { showResetDialog = true })
+                detectTapGestures(onLongPress = { onAdmin() })
             }
         )
 
@@ -158,23 +157,6 @@ fun MainScreen(vm: GameViewModel, onReset: () -> Unit) {
         }
 
         Spacer(Modifier.height(24.dp))
-    }
-
-    if (showResetDialog) {
-        AlertDialog(
-            onDismissRequest = { showResetDialog = false },
-            title = { Text("게임 초기화") },
-            text = { Text("팀 이름과 모은 달란트, 수집 기록이 모두 삭제됩니다.\n정말 초기화할까요?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showResetDialog = false
-                    onReset()
-                }) { Text("초기화", color = MaterialTheme.colorScheme.error) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) { Text("취소") }
-            }
-        )
     }
 }
 

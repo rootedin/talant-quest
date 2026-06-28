@@ -1,10 +1,12 @@
 package com.talantquest.ui
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -12,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.talantquest.data.GameViewModel
 
 @Composable
-fun TeamSetupScreen(vm: GameViewModel, onDone: () -> Unit) {
+fun TeamSetupScreen(vm: GameViewModel, onAdmin: () -> Unit, onDone: () -> Unit) {
     var name by remember { mutableStateOf("") }
 
     Column(
@@ -28,7 +30,10 @@ fun TeamSetupScreen(vm: GameViewModel, onDone: () -> Unit) {
             "달란트 퀘스트",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onLongPress = { onAdmin() })
+            }
         )
         Text(
             "NFC 태그를 찾아 달란트를 모으세요!",

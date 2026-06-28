@@ -5,7 +5,9 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NdefMessage
+import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
+import android.nfc.tech.Ndef
 
 object NfcHandler {
 
@@ -19,20 +21,28 @@ object NfcHandler {
         val rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
             ?: return null
         if (rawMessages.isEmpty()) return null
-
-        val ndefMessage = rawMessages[0] as NdefMessage
+        val ndefMessage = rawMessages[0] as? NdefMessage ?: return null
         val record = ndefMessage.records.firstOrNull() ?: return null
-
-        val text = try {
-            val payload = record.payload
-            val statusByte = payload[0].toInt()
-            val langLen = statusByte and 0x3f
-            String(payload, 1 + langLen, payload.size - 1 - langLen, Charsets.UTF_8)
-        } catch (e: Exception) {
-            return null
-        }
-
+        val text = extractText(record) ?: return null
         return parseText(text.trim())
+    }
+
+    /** RTD_TEXT(well-known)와 MIME(text/plain) 레코드를 모두 지원한다. */
+    private fun extractText(record: NdefRecord): String? {
+        return try {
+            val payload = record.payload
+            if (record.tnf == NdefRecord.TNF_WELL_KNOWN &&
+                record.type.contentEquals(NdefRecord.RTD_TEXT)
+            ) {
+                val statusByte = payload[0].toInt()
+                val langLen = statusByte and 0x3f
+                String(payload, 1 + langLen, payload.size - 1 - langLen, Charsets.UTF_8)
+            } else {
+                String(payload, Charsets.UTF_8)
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
     fun parseText(text: String): TagData? {
@@ -61,10 +71,16 @@ object NfcHandler {
                 try { addDataType("text/plain") } catch (_: Exception) {}
             }
         )
-        adapter.enableForegroundDispatch(activity, pending, filters, null)
+        // Ndef tech를 함께 등록해 MIME/RTD_TEXT 등 모든 NDEF 태그를 잡는다.
+        val techLists = arrayOf(arrayOf(Ndef::class.java.name))
+        try {
+            adapter.enableForegroundDispatch(activity, pending, filters, techLists)
+        } catch (_: Exception) {
+            // 액티비티가 resumed 상태가 아닐 때 등 — 무시
+        }
     }
 
     fun disableForeground(activity: Activity, adapter: NfcAdapter?) {
-        adapter?.disableForegroundDispatch(activity)
+        try { adapter?.disableForegroundDispatch(activity) } catch (_: Exception) {}
     }
 }

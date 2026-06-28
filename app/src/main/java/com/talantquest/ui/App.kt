@@ -10,11 +10,13 @@ import androidx.navigation.compose.rememberNavController
 import com.talantquest.data.GameViewModel
 import com.talantquest.data.GameViewModelFactory
 import com.talantquest.nfc.NfcHandler
+import com.talantquest.nfc.NfcWriteController
 
 @Composable
 fun TalantQuestApp(
     nfcTagEvent: State<NfcHandler.TagData?>,
-    onNfcConsumed: () -> Unit
+    onNfcConsumed: () -> Unit,
+    writeController: NfcWriteController
 ) {
     val context = LocalContext.current
     val vm: GameViewModel = viewModel(factory = GameViewModelFactory(context))
@@ -51,17 +53,28 @@ fun TalantQuestApp(
 
     NavHost(navController = navController, startDestination = start) {
         composable("setup") {
-            TeamSetupScreen(vm) {
-                navController.navigate("main") {
-                    popUpTo("setup") { inclusive = true }
+            TeamSetupScreen(
+                vm,
+                onAdmin = { navController.navigate("admin") },
+                onDone = {
+                    navController.navigate("main") {
+                        popUpTo("setup") { inclusive = true }
+                    }
                 }
-            }
+            )
         }
         composable("main") {
-            MainScreen(vm, onReset = {
-                vm.resetGame()
-                navController.navigate("setup") { popUpTo(0) }
-            })
+            MainScreen(vm, onAdmin = { navController.navigate("admin") })
+        }
+        composable("admin") {
+            AdminScreen(
+                controller = writeController,
+                onReset = {
+                    vm.resetGame()
+                    navController.navigate("setup") { popUpTo(0) }
+                },
+                onBack = { navController.popBackStack() }
+            )
         }
         composable("quiz/{tagId}") { back ->
             val tagId = back.arguments?.getString("tagId") ?: return@composable
