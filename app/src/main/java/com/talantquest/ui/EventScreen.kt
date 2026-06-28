@@ -60,59 +60,62 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         label = "scale"
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(if (isGain) "🎉" else "😱", fontSize = 72.sp, modifier = Modifier.scale(scale))
-
-        Spacer(Modifier.height(24.dp))
-
-        Text(
-            event.description,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            event.flavor,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(Modifier.height(32.dp))
-
-        val amountText = if (isGain) "+${event.amount}" else "${event.amount}"
-        Text(
-            "$amountText 달란트",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            "현재 잔액: ${vm.talant.intValue} 달란트",
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(48.dp))
-
-        Button(
-            onClick = onBack,
-            modifier = Modifier.fillMaxWidth().height(52.dp)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(if (isGain) "🎉" else "😱", fontSize = 72.sp, modifier = Modifier.scale(scale))
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                event.description,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                event.flavor,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(32.dp))
+
+            val amountText = if (isGain) "+${event.amount}" else "${event.amount}"
+            Text(
+                "$amountText 달란트",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                "현재 잔액: ${vm.talant.intValue} 달란트",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(Modifier.height(48.dp))
+
+            Button(
+                onClick = onBack,
+                modifier = Modifier.fillMaxWidth().height(52.dp)
+            ) {
+                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
         }
+        if (isGain) ConfettiOverlay()
     }
 }

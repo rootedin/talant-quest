@@ -62,28 +62,32 @@ fun ResultScreen(
     val isGain = amount >= 0
     val context = LocalContext.current
     LaunchedEffect(Unit) { vibrate(context, isGain) }
-    Column(
-        modifier = Modifier.fillMaxSize().padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(emoji, fontSize = 72.sp)
-        Spacer(Modifier.height(20.dp))
-        Text(title, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
-        Text(body, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center)
-        Spacer(Modifier.height(32.dp))
-        val sign = if (amount > 0) "+" else ""
-        Text(
-            "$sign$amount 달란트",
-            fontSize = 42.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-        )
-        Spacer(Modifier.height(48.dp))
-        Button(onClick = onClose, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-            Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(emoji, fontSize = 72.sp)
+            Spacer(Modifier.height(20.dp))
+            Text(title, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
+            Text(body, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center)
+            Spacer(Modifier.height(32.dp))
+            val sign = if (amount > 0) "+" else ""
+            Text(
+                "$sign$amount 달란트",
+                fontSize = 42.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
+            Spacer(Modifier.height(48.dp))
+            Button(onClick = onClose, modifier = Modifier.fillMaxWidth().height(52.dp)) {
+                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
         }
+        if (isGain) ConfettiOverlay()
     }
 }

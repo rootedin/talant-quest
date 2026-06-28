@@ -1,0 +1,137 @@
+# 달란트 퀘스트 (Talant Quest)
+
+NFC 태그를 활용한 **교회 수련회용 안드로이드 게임 앱**입니다.
+팀별로 기기 1대를 들고 수련회 장소 곳곳에 숨겨진 NFC 태그를 스캔하며 **달란트(점수)** 를 모읍니다.
+가장 많은 달란트를 모은 팀이 우승! (마태복음 25장 *달란트 비유*에서 착안)
+
+> 📱 팀당 안드로이드 기기 1대 · ⏱ 권장 플레이 1~2시간 · 👥 팀 대항전
+
+---
+
+## 🎮 게임 방식
+
+1. 앱을 켜고 **팀 이름**을 입력합니다.
+2. 장소 곳곳에 붙은/숨겨진 **NFC 태그**를 찾아 기기를 가까이 댑니다.
+3. 태그 종류에 따라 미션이 뜨고, 성공하면 **달란트**가 적립됩니다.
+4. 정해진 시간이 끝나면 각 팀의 화면에 표시된 **최종 달란트**로 순위를 매깁니다.
+
+서버 없이 각 기기에서 **로컬로 점수를 관리**하므로 인터넷이 필요 없습니다.
+
+---
+
+## 🏷️ 태그 종류
+
+| 종류 | 아이콘 | 내용 | 보상 |
+|---|:---:|---|---|
+| **퀴즈** | ❓ | 성경/찬양 4지선다 4문제 | 정답 1개당 +30 (최대 120) |
+| **암호 찾기** | 🔑 | 힌트를 보고 장소에 숨긴 암호를 찾아 입력 | +110 ~ +150 |
+| **투자** | 📈 | 보유 달란트를 베팅 (안전/일반/고위험) | 베팅액 ×1.5 ~ ×3 (실패 시 손실) |
+| **이벤트** | 🎲 | 스캔 시 랜덤으로 달란트 증감 | ±30 ~ ±120 |
+
+- **퀴즈·암호·투자 태그는 팀당 1회**만 사용할 수 있습니다.
+- **이벤트 태그**는 15분 쿨타임 후 재사용할 수 있습니다.
+- 투자는 *달란트 비유*처럼 "맡은 것을 불릴지 묻어둘지" 선택하는 재미 요소입니다.
+
+---
+
+## 📡 NFC 태그 작성 형식
+
+각 NFC 태그에는 아래 형식의 **텍스트(Text/plain) 레코드**를 기록하세요.
+("NFC Tools" 같은 무료 앱으로 누구나 기록 가능)
+
+```
+TALANT:<종류>:<번호>
+```
+
+| 종류 | 작성 예시 | 앱에 준비된 개수 |
+|---|---|:---:|
+| 퀴즈 | `TALANT:QUIZ:01` ~ `TALANT:QUIZ:15` | 15 |
+| 암호 | `TALANT:CODE:01` ~ `TALANT:CODE:10` | 10 |
+| 투자 | `TALANT:INVEST:01` (번호는 자유) | 위치 수만큼 |
+| 이벤트 | `TALANT:EVENT:01` (번호는 자유) | 위치 수만큼 |
+
+> 💡 **암호 찾기 태그**는 앱이 보여주는 힌트(예: *"강당 무대 왼쪽 기둥 아래"*)에 맞춰
+> 실제 장소에 정답 암호(예: `JOY1`)를 적은 쪽지를 미리 숨겨 두세요.
+> 힌트·정답·보상은 [`GameData.kt`](app/src/main/java/com/talantquest/data/GameData.kt)에서 확인/수정할 수 있습니다.
+
+### 추천 태그 구성 (1~2시간 기준)
+- 퀴즈 10~12개 · 암호 6~8개 · 투자 3~5개 · 이벤트 4~6개
+
+---
+
+## ✨ 주요 기능
+
+- 팀별 달란트 실시간 적립 및 **숫자 애니메이션**
+- **수집 진행도** 표시 (퀴즈 X/15, 암호 X/10) + 전체 수집 시 🏆 트로피
+- 정답/획득 시 **폭죽(컨페티) 연출**과 **진동 피드백**
+- **NFC 꺼짐/미지원 감지** 및 설정 바로가기 안내
+- 운영자용 **초기화** (메인 화면에서 팀 이름을 길게 누르기 → 기기마다 재세팅)
+- 모든 데이터는 기기 로컬(`SharedPreferences`)에 저장 — 서버·인터넷 불필요
+
+---
+
+## 🛠️ 기술 스택
+
+- **언어**: Kotlin
+- **UI**: Jetpack Compose (Material 3)
+- **구조**: 단일 Activity + Navigation Compose, `ViewModel` + `SharedPreferences`
+- **NFC**: `NfcAdapter` Foreground Dispatch (NDEF Text 레코드)
+- **minSdk** 24 / **targetSdk** 35
+
+---
+
+## 🚀 빌드 & 실행
+
+### Android Studio (권장)
+1. Android Studio로 이 폴더를 엽니다.
+2. Gradle Sync 후 기기를 연결하고 ▶ **Run**.
+
+### 명령줄
+```bash
+./gradlew :app:assembleDebug
+```
+빌드 결과 APK: `app/build/outputs/apk/debug/app-debug.apk`
+
+설치:
+```bash
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+> ⚠️ **JDK 주의**: 이 프로젝트는 JDK 17/21 환경에서 빌드됩니다.
+> `gradle.properties`의 `org.gradle.java.home` 값은 **머신별 경로**이므로,
+> 다른 컴퓨터에서 clone 시 본인의 JDK 경로로 수정하거나 해당 줄을 삭제하세요.
+> (Android Studio는 내장 JDK를 사용하므로 보통 수정이 필요 없습니다.)
+
+---
+
+## 📁 프로젝트 구조
+
+```
+app/src/main/java/com/talantquest/
+├── MainActivity.kt          # NFC 인텐트 수신
+├── data/
+│   ├── GameData.kt          # 퀴즈/암호/투자/이벤트 콘텐츠 (여기서 내용 수정)
+│   ├── GameRepository.kt    # SharedPreferences 저장/조회
+│   └── GameViewModel.kt     # 상태 관리
+├── nfc/
+│   └── NfcHandler.kt        # NDEF 파싱 (TALANT:종류:번호)
+└── ui/
+    ├── App.kt               # 내비게이션
+    ├── TeamSetupScreen.kt   # 팀 이름 입력
+    ├── MainScreen.kt        # 달란트 잔액 · 진행도 · NFC 상태
+    ├── QuizScreen.kt        # 퀴즈
+    ├── CodeHuntScreen.kt    # 암호 찾기
+    ├── InvestScreen.kt      # 투자
+    ├── EventScreen.kt       # 랜덤 이벤트
+    ├── Confetti.kt          # 폭죽 애니메이션
+    ├── Haptics.kt           # 진동 피드백
+    └── SharedComposables.kt # 공통 결과/오류 화면
+```
+
+---
+
+## 📝 콘텐츠 수정하기
+
+퀴즈 문제, 암호 힌트·정답, 보상 금액, 이벤트 종류는 모두
+[`GameData.kt`](app/src/main/java/com/talantquest/data/GameData.kt) 한 파일에서 관리합니다.
+앱 안에 하드코딩되어 있으므로, 내용을 바꾼 뒤 다시 빌드하면 됩니다.
