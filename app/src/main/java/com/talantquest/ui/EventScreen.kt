@@ -1,0 +1,118 @@
+package com.talantquest.ui
+
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.talantquest.data.GameData
+import com.talantquest.data.GameViewModel
+
+@Composable
+fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
+    if (vm.isEventOnCooldown(tagId)) {
+        val minutes = vm.getEventCooldownMinutes(tagId)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("⏳", fontSize = 56.sp)
+            Spacer(Modifier.height(16.dp))
+            Text("쿨타임 중", fontSize = 22.sp, fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary)
+            Text("약 ${minutes}분 후 다시 사용 가능합니다",
+                fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
+            Spacer(Modifier.height(32.dp))
+            Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(52.dp)) {
+                Text("돌아가기")
+            }
+        }
+        return
+    }
+
+    val event = remember { GameData.getRandomEvent() }
+    val isGain = event.amount > 0
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        vm.addTalant(event.amount)
+        vm.setLastEventScanTime(tagId)
+        vibrate(context, isGain)
+    }
+
+    val bounce = rememberInfiniteTransition(label = "bounce")
+    val scale by bounce.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(600, easing = EaseInOut),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "scale"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(if (isGain) "🎉" else "😱", fontSize = 72.sp, modifier = Modifier.scale(scale))
+
+        Spacer(Modifier.height(24.dp))
+
+        Text(
+            event.description,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            event.flavor,
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(Modifier.height(32.dp))
+
+        val amountText = if (isGain) "+${event.amount}" else "${event.amount}"
+        Text(
+            "$amountText 달란트",
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            "현재 잔액: ${vm.talant.intValue} 달란트",
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(Modifier.height(48.dp))
+
+        Button(
+            onClick = onBack,
+            modifier = Modifier.fillMaxWidth().height(52.dp)
+        ) {
+            Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
+    }
+}

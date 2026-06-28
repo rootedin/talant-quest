@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Coin outer circle -->
+    <path
+        android:fillColor="#F5C842"
+        android:pathData="M54,18 A36,36 0 1,1 53.999,18 Z" />
+
+    <!-- Coin inner circle -->
+    <path
+        android:fillColor="#FFE066"
+        android:pathData="M54,22 A32,32 0 1,1 53.999,22 Z" />
+
+</vector>

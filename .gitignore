@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# 머신별 SDK 경로 (Android Studio가 자동 생성)
+local.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 서명 키 (비밀 정보 — 커밋 금지)
+*.jks
+*.keystore
