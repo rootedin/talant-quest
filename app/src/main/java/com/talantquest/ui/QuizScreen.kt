@@ -164,11 +164,11 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("❓", fontSize = 24.sp)
+            Text("❓", fontSize = 36.sp)
             Spacer(Modifier.width(8.dp))
             Text(
                 "퀴즈 태그 #$tagId",
-                fontSize = 18.sp,
+                fontSize = 27.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
@@ -182,12 +182,12 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             TextButton(
                 onClick = { volumeSlider = vm.ttsVolume.floatValue; showVolumeDialog = true },
                 contentPadding = PaddingValues(4.dp)
-            ) { Text(volIcon, fontSize = 20.sp) }
+            ) { Text(volIcon, fontSize = 28.sp) }
 
             if (!showResult && !isRevealing) {
                 Spacer(Modifier.width(4.dp))
-                Text("%02d".format(timeLeft), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = timerColor)
-                Text(" 초", fontSize = 14.sp, color = timerColor)
+                Text("%02d".format(timeLeft), fontSize = 33.sp, fontWeight = FontWeight.Bold, color = timerColor)
+                Text(" 초", fontSize = 21.sp, color = timerColor)
             }
         }
 
@@ -233,7 +233,7 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         )
         Text(
             "${currentIndex + 1} / ${quizTag.questions.size}",
-            fontSize = 12.sp,
+            fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -262,9 +262,9 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 Text(
                     question.question,
                     modifier = Modifier.padding(20.dp),
-                    fontSize = 17.sp,
+                    fontSize = 26.sp,
                     fontWeight = FontWeight.Medium,
-                    lineHeight = 26.sp
+                    lineHeight = 38.sp
                 )
             }
 
@@ -285,15 +285,15 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .heightIn(min = 52.dp),
+                        .heightIn(min = 72.dp),
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = bgColor)
                 ) {
                     Text(
                         "${'①'.plus(i)} $option",
-                        fontSize = 14.sp,
+                        fontSize = 21.sp,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(),
-                        lineHeight = 20.sp
+                        lineHeight = 30.sp
                     )
                 }
             }
@@ -302,7 +302,7 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 Spacer(Modifier.height(12.dp))
                 Text(
                     "정답 확인 중... ${wrongLock}초 후 넘어갈 수 있습니다",
-                    fontSize = 12.sp,
+                    fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -349,7 +349,7 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             enabled = buttonEnabled,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(72.dp)
         ) {
             Text(
                 when {
@@ -360,7 +360,8 @@ fun QuizScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                     currentIndex + 1 < quizTag.questions.size -> "다음 문제 →"
                     else                                      -> "결과 보기"
                 },
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
             )
         }
     }

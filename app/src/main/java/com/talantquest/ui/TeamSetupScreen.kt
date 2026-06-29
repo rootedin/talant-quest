@@ -28,7 +28,7 @@ fun TeamSetupScreen(vm: GameViewModel, onAdmin: () -> Unit, onDone: () -> Unit) 
         Spacer(Modifier.height(16.dp))
         Text(
             "달란트 퀘스트",
-            fontSize = 28.sp,
+            fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.pointerInput(Unit) {
@@ -37,7 +37,7 @@ fun TeamSetupScreen(vm: GameViewModel, onAdmin: () -> Unit, onDone: () -> Unit) 
         )
         Text(
             "NFC 태그를 찾아 달란트를 모으세요!",
-            fontSize = 14.sp,
+            fontSize = 21.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
@@ -62,9 +62,9 @@ fun TeamSetupScreen(vm: GameViewModel, onAdmin: () -> Unit, onDone: () -> Unit) 
             enabled = name.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(72.dp)
         ) {
-            Text("게임 시작!", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("게임 시작!", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
     }
 }

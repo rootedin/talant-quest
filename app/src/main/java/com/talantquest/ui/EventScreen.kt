@@ -28,14 +28,14 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         ) {
             Text("🚫", fontSize = 56.sp)
             Spacer(Modifier.height(16.dp))
-            Text("이미 사용한 태그", fontSize = 22.sp, fontWeight = FontWeight.Bold,
+            Text("이미 사용한 태그", fontSize = 33.sp, fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary)
             Text("이 이벤트 태그는 이미 사용했습니다.",
-                fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
             Spacer(Modifier.height(32.dp))
-            Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-                Text("돌아가기")
+            Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(72.dp)) {
+                Text("돌아가기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             }
         }
         return
@@ -76,7 +76,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
 
             Text(
                 event.description,
-                fontSize = 22.sp,
+                fontSize = 33.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
@@ -86,7 +86,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
 
             Text(
                 event.flavor,
-                fontSize = 14.sp,
+                fontSize = 21.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
@@ -96,7 +96,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             val amountText = if (isGain) "+${event.amount}" else "${event.amount}"
             Text(
                 "$amountText 달란트",
-                fontSize = 40.sp,
+                fontSize = 56.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
@@ -105,7 +105,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
 
             Text(
                 "현재 잔액: ${vm.talant.intValue} 달란트",
-                fontSize = 14.sp,
+                fontSize = 21.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
@@ -113,9 +113,9 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
 
             Button(
                 onClick = onBack,
-                modifier = Modifier.fillMaxWidth().height(52.dp)
+                modifier = Modifier.fillMaxWidth().height(72.dp)
             ) {
-                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 24.sp)
             }
         }
         if (isGain) ConfettiOverlay()

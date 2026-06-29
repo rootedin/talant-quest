@@ -64,11 +64,11 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("🔍", fontSize = 24.sp)
+            Text("🔍", fontSize = 36.sp)
             Spacer(Modifier.width(8.dp))
             Text(
                 "암호 찾기 #$tagId",
-                fontSize = 18.sp,
+                fontSize = 27.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -84,17 +84,17 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
                     "💡 힌트",
-                    fontSize = 13.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
                     codeTag.hint,
-                    fontSize = 18.sp,
+                    fontSize = 27.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    lineHeight = 28.sp
+                    lineHeight = 40.sp
                 )
             }
         }
@@ -108,14 +108,14 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     "보상: $currentReward 달란트" + if (attemptsLeft < 2) "  (첫 번째 오답으로 절반 감소)" else "",
-                    fontSize = 14.sp,
+                    fontSize = 21.sp,
                     color = if (attemptsLeft < 2) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     "남은 기회: $attemptsLeft / 2",
-                    fontSize = 13.sp,
+                    fontSize = 20.sp,
                     color = if (attemptsLeft == 1) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -163,12 +163,12 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             enabled = input.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(72.dp)
         ) {
             Text(
                 if (attemptsLeft == 1) "마지막 기회로 제출" else "암호 제출",
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 24.sp
             )
         }
 

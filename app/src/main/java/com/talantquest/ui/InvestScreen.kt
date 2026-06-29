@@ -43,11 +43,11 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("📈", fontSize = 24.sp)
+            Text("📈", fontSize = 36.sp)
             Spacer(Modifier.width(8.dp))
             Text(
                 "투자 태그",
-                fontSize = 18.sp,
+                fontSize = 27.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -68,11 +68,11 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("현재 달란트", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("현재 달란트", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
                         "💰 $currentTalant",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontSize = 27.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -82,11 +82,11 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("성공 확률", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("성공 확률", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
                         "🎯 50%",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 24.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }
@@ -98,7 +98,7 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         Text(
             "투자 금액 선택",
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
+            fontSize = 21.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(8.dp))
@@ -131,33 +131,33 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                         Text(
                             "${opt.emoji} ${opt.name}",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
+                            fontSize = 22.sp,
                             color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
                             else MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             opt.description,
-                            fontSize = 11.sp,
+                            fontSize = 17.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
                             "${opt.betAmount} 달란트",
-                            fontSize = 18.sp,
+                            fontSize = 27.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
                             else MaterialTheme.colorScheme.primary
                         )
                         Text(
                             "성공 시 × 2",
-                            fontSize = 11.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
                             else MaterialTheme.colorScheme.tertiary
                         )
                         if (!canAfford) {
-                            Text("달란트 부족", fontSize = 10.sp, color = MaterialTheme.colorScheme.error)
+                            Text("달란트 부족", fontSize = 15.sp, color = MaterialTheme.colorScheme.error)
                         }
                     }
                 }
@@ -177,12 +177,12 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
                         "성공 시 +${opt.betAmount}달란트 (합계 ${currentTalant + opt.betAmount})",
-                        fontSize = 13.sp,
+                        fontSize = 20.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     Text(
                         "실패 시 -${opt.betAmount}달란트 (합계 ${currentTalant - opt.betAmount})",
-                        fontSize = 13.sp,
+                        fontSize = 20.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
@@ -203,9 +203,9 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             enabled = selectedOption >= 0,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .height(72.dp)
         ) {
-            Text("투자 실행!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text("투자 실행!", fontWeight = FontWeight.Bold, fontSize = 24.sp)
         }
         Spacer(Modifier.height(8.dp))
         TextButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) {

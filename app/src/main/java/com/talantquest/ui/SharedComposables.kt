@@ -21,12 +21,12 @@ fun ErrorScreen(message: String, onBack: () -> Unit) {
     ) {
         Text("❌", fontSize = 56.sp)
         Spacer(Modifier.height(16.dp))
-        Text("오류", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
-        Text(message, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Text("오류", fontSize = 33.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
+        Text(message, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
         Spacer(Modifier.height(32.dp))
-        Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-            Text("돌아가기")
+        Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(72.dp)) {
+            Text("돌아가기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -40,13 +40,13 @@ fun UsedTagScreen(message: String, onBack: () -> Unit) {
     ) {
         Text("🔒", fontSize = 56.sp)
         Spacer(Modifier.height(16.dp))
-        Text("이미 사용됨", fontSize = 22.sp, fontWeight = FontWeight.Bold,
+        Text("이미 사용됨", fontSize = 33.sp, fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(message, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Text(message, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
         Spacer(Modifier.height(32.dp))
-        Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-            Text("돌아가기")
+        Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(72.dp)) {
+            Text("돌아가기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -71,21 +71,21 @@ fun ResultScreen(
         ) {
             Text(emoji, fontSize = 72.sp)
             Spacer(Modifier.height(20.dp))
-            Text(title, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Text(title, fontSize = 36.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
-            Text(body, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Text(body, fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center)
             Spacer(Modifier.height(32.dp))
             val sign = if (amount > 0) "+" else ""
             Text(
                 "$sign$amount 달란트",
-                fontSize = 42.sp,
+                fontSize = 60.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isGain) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
             Spacer(Modifier.height(48.dp))
-            Button(onClick = onClose, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Button(onClick = onClose, modifier = Modifier.fillMaxWidth().height(72.dp)) {
+                Text("메인으로 돌아가기", fontWeight = FontWeight.Bold, fontSize = 24.sp)
             }
         }
         if (isGain) ConfettiOverlay()

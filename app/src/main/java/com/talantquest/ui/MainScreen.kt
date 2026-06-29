@@ -80,7 +80,7 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
         // 팀 이름 (길게 누르면 관리자 모드)
         Text(
             teamName,
-            fontSize = 20.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.pointerInput(Unit) {
@@ -101,15 +101,15 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
                     .padding(28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("보유 달란트", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("보유 달란트", fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(8.dp))
                 Text(
                     "💰 $animatedTalant",
-                    fontSize = 46.sp,
+                    fontSize = 64.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text("달란트", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("달란트", fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
@@ -123,7 +123,7 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
                     if (allFound) "🏆 모든 보물을 찾았어요!" else "🗺️ 수집 진행도",
-                    fontSize = 15.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (allFound) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.onSurface
@@ -167,10 +167,10 @@ private fun ProgressRow(label: String, found: Int, total: Int) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+            Text(label, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurface)
             Text(
                 "$found / $total",
-                fontSize = 14.sp,
+                fontSize = 21.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -209,11 +209,11 @@ private fun NfcReadyIndicator() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("🔍", fontSize = 48.sp)
+            Text("🔍", fontSize = 64.sp)
             Spacer(Modifier.height(8.dp))
             Text(
                 "NFC 대기중",
-                fontSize = 13.sp,
+                fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Medium
             )
@@ -222,7 +222,7 @@ private fun NfcReadyIndicator() {
     Spacer(Modifier.height(20.dp))
     Text(
         "태그에 기기를 가까이 대세요",
-        fontSize = 14.sp,
+        fontSize = 21.sp,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center
     )
@@ -247,18 +247,18 @@ private fun NfcWarningCard(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("📵", fontSize = 40.sp)
+            Text("📵", fontSize = 56.sp)
             Spacer(Modifier.height(12.dp))
             Text(
                 title,
-                fontSize = 16.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onErrorContainer
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 message,
-                fontSize = 13.sp,
+                fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 textAlign = TextAlign.Center
             )
