@@ -6,7 +6,6 @@ import android.nfc.Tag
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import com.talantquest.nfc.NfcHandler
 import com.talantquest.nfc.NfcWriteController
@@ -28,7 +27,6 @@ class MainActivity : ComponentActivity(), NfcWriteController {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        enableEdgeToEdge()
         setContent {
             TalantQuestTheme {
                 TalantQuestApp(
@@ -83,11 +81,12 @@ class MainActivity : ComponentActivity(), NfcWriteController {
 
     private fun enableReaderMode() {
         val adapter = nfcAdapter ?: return
+        // FLAG_READER_SKIP_NDEF_CHECK 를 켜면 NDEF 탐지를 건너뛰어
+        // Ndef.get(tag) 가 null 이 되므로(=쓰기 불가) 사용하지 않는다.
         val flags = NfcAdapter.FLAG_READER_NFC_A or
             NfcAdapter.FLAG_READER_NFC_B or
             NfcAdapter.FLAG_READER_NFC_F or
-            NfcAdapter.FLAG_READER_NFC_V or
-            NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK
+            NfcAdapter.FLAG_READER_NFC_V
         adapter.enableReaderMode(this, { tag: Tag ->
             val provider = writePayloadProvider ?: return@enableReaderMode
             val onResult = writeOnResult ?: return@enableReaderMode

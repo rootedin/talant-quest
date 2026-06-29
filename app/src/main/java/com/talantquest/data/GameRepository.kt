@@ -19,23 +19,8 @@ class GameRepository(context: Context) {
     fun isTagUsed(tagId: String): Boolean = prefs.getBoolean("used_$tagId", false)
     fun markTagUsed(tagId: String) = prefs.edit().putBoolean("used_$tagId", true).apply()
 
-    fun getLastEventScanTime(tagId: String): Long = prefs.getLong("event_time_$tagId", 0L)
-    fun setLastEventScanTime(tagId: String) =
-        prefs.edit().putLong("event_time_$tagId", System.currentTimeMillis()).apply()
-
-    fun isEventOnCooldown(tagId: String): Boolean {
-        val last = getLastEventScanTime(tagId)
-        return last != 0L && System.currentTimeMillis() - last < COOLDOWN_MS
-    }
-
-    fun getEventCooldownMinutes(tagId: String): Int {
-        val remaining = COOLDOWN_MS - (System.currentTimeMillis() - getLastEventScanTime(tagId))
-        return if (remaining <= 0) 0 else (remaining / 60_000).toInt() + 1
-    }
+    fun getTtsVolume(): Float = prefs.getFloat("tts_volume", 1.0f)
+    fun setTtsVolume(v: Float) = prefs.edit().putFloat("tts_volume", v).apply()
 
     fun resetAll() = prefs.edit().clear().apply()
-
-    companion object {
-        private const val COOLDOWN_MS = 15 * 60 * 1000L
-    }
 }

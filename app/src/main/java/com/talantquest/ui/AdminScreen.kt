@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.talantquest.data.GameData
 import com.talantquest.nfc.NfcWriteController
 import com.talantquest.nfc.WriteResult
 
@@ -35,7 +36,7 @@ fun AdminScreen(
     val owner = LocalLifecycleOwner.current
 
     val types = listOf(
-        TagTypeInfo("QUIZ", "퀴즈", 15),
+        TagTypeInfo("QUIZ", "퀴즈", 10),
         TagTypeInfo("CODE", "암호", 10),
         TagTypeInfo("INVEST", "투자", null),
         TagTypeInfo("EVENT", "이벤트", null),
@@ -79,7 +80,10 @@ fun AdminScreen(
             lastResult = result
             if (result is WriteResult.Success) {
                 writtenCount++
-                if (autoIncrement) number++
+                if (autoIncrement) {
+                    val max = types[typeIndex].max
+                    if (max == null || number < max) number++
+                }
             }
         }
     }
@@ -137,7 +141,11 @@ fun AdminScreen(
                 FilterChip(
                     selected = typeIndex == i,
                     onClick = {
-                        if (!armed) { typeIndex = i; number = 1; lastResult = null }
+                        if (!armed) {
+                            typeIndex = i
+                            number = if (t.max != null) minOf(number, t.max) else number
+                            lastResult = null
+                        }
                     },
                     label = { Text(t.label, fontSize = 13.sp) },
                     enabled = !armed,
@@ -174,7 +182,7 @@ fun AdminScreen(
                     textAlign = TextAlign.Center, modifier = Modifier.widthIn(min = 56.dp))
                 FilledTonalButton(
                     onClick = { number++ },
-                    enabled = !armed,
+                    enabled = !armed && (type.max == null || number < type.max),
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier.size(44.dp)
                 ) { Text("+", fontSize = 22.sp) }
@@ -201,7 +209,12 @@ fun AdminScreen(
             }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
+
+        // 태그 내용 미리보기
+        TagContentPreview(typeCode = type.code, number = number)
+
+        Spacer(Modifier.height(16.dp))
 
         if (!armed) {
             Button(
@@ -284,6 +297,91 @@ fun AdminScreen(
                 TextButton(onClick = { showResetDialog = false }) { Text("취소") }
             }
         )
+    }
+}
+
+@Composable
+private fun TagContentPreview(typeCode: String, number: Int) {
+    val id = "%02d".format(number)
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+        )
+    ) {
+        Column(Modifier.fillMaxWidth().padding(14.dp)) {
+            Text(
+                "태그 내용 미리보기",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(8.dp))
+            when (typeCode) {
+                "QUIZ" -> {
+                    val tag = GameData.getQuizTag(id)
+                    if (tag != null) {
+                        tag.questions.forEachIndexed { i, q ->
+                            Text("Q${i + 1}. ${q.question}", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            q.options.forEachIndexed { oi, opt ->
+                                val marker = if (oi == q.correctIndex) "✓" else "·"
+                                Text(
+                                    "   $marker $opt",
+                                    fontSize = 11.sp,
+                                    color = if (oi == q.correctIndex)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            if (i < tag.questions.lastIndex) Spacer(Modifier.height(6.dp))
+                        }
+                    } else {
+                        Text("해당 번호($id)의 퀴즈 데이터가 없습니다.", fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.error)
+                    }
+                }
+                "CODE" -> {
+                    val tag = GameData.getCodeTag(id)
+                    if (tag != null) {
+                        Row {
+                            Text("📍 위치: ", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            Text(tag.hint, fontSize = 12.sp)
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        Row {
+                            Text("🔑 암호: ", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            Text(tag.answer, fontSize = 12.sp, color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        Row {
+                            Text("💰 보상: ", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            Text("${tag.reward} 달란트", fontSize = 12.sp)
+                        }
+                    } else {
+                        Text("해당 번호($id)의 암호 데이터가 없습니다.", fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.error)
+                    }
+                }
+                "INVEST" -> {
+                    Text("태그를 찍으면 투자 화면으로 이동합니다.", fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Spacer(Modifier.height(4.dp))
+                    GameData.investOptions.forEach { opt ->
+                        Text("${opt.emoji} ${opt.name} — ${opt.description}", fontSize = 11.sp)
+                    }
+                }
+                "EVENT" -> {
+                    Text("태그를 찍으면 이벤트 ${GameData.eventPool.size}개 중 랜덤으로 한 가지가 발생합니다.",
+                        fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Spacer(Modifier.height(4.dp))
+                    GameData.eventPool.forEach { e ->
+                        val sign = if (e.amount >= 0) "+" else ""
+                        Text("• ${e.description} ($sign${e.amount})", fontSize = 11.sp)
+                    }
+                }
+            }
+        }
     }
 }
 

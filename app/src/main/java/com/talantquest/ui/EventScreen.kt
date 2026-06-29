@@ -17,18 +17,20 @@ import com.talantquest.data.GameViewModel
 
 @Composable
 fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
-    if (vm.isEventOnCooldown(tagId)) {
-        val minutes = vm.getEventCooldownMinutes(tagId)
+    val usedKey = "EVENT_$tagId"
+    val wasAlreadyUsed = remember { vm.isTagUsed(usedKey) }
+
+    if (wasAlreadyUsed) {
         Column(
             modifier = Modifier.fillMaxSize().padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("⏳", fontSize = 56.sp)
+            Text("🚫", fontSize = 56.sp)
             Spacer(Modifier.height(16.dp))
-            Text("쿨타임 중", fontSize = 22.sp, fontWeight = FontWeight.Bold,
+            Text("이미 사용한 태그", fontSize = 22.sp, fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary)
-            Text("약 ${minutes}분 후 다시 사용 가능합니다",
+            Text("이 이벤트 태그는 이미 사용했습니다.",
                 fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
             Spacer(Modifier.height(32.dp))
@@ -45,7 +47,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         vm.addTalant(event.amount)
-        vm.setLastEventScanTime(tagId)
+        vm.markTagUsed(usedKey)
         vibrate(context, isGain)
     }
 

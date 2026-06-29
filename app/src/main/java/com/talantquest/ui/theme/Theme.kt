@@ -1,8 +1,11 @@
 package com.talantquest.ui.theme
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
@@ -25,7 +28,17 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun TalantQuestTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = DarkColorScheme,
-        content = content
-    )
+        colorScheme = DarkColorScheme
+    ) {
+        // Surface 로 감싸야 LocalContentColor 가 onBackground(밝은 색)로 설정된다.
+        // 그렇지 않으면 색을 지정하지 않은 Text 가 기본값(검정)으로 렌더링되어
+        // 어두운 배경에서 보이지 않는다.
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = DarkColorScheme.background,
+            contentColor = DarkColorScheme.onBackground
+        ) {
+            content()
+        }
+    }
 }

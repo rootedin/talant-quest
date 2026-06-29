@@ -209,7 +209,7 @@ private fun NfcReadyIndicator() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("📡", fontSize = 48.sp)
+            Text("🔍", fontSize = 48.sp)
             Spacer(Modifier.height(8.dp))
             Text(
                 "NFC 대기중",

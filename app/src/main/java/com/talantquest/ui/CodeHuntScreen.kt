@@ -25,16 +25,30 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
     }
 
     var input by remember { mutableStateOf("") }
-    var wrongAttempt by remember { mutableStateOf(false) }
+    var attemptsLeft by remember { mutableIntStateOf(2) }
     var showResult by remember { mutableStateOf(false) }
+    var showFailed by remember { mutableStateOf(false) }
     val keyboard = LocalSoftwareKeyboardController.current
+
+    val currentReward = if (attemptsLeft == 2) codeTag.reward else codeTag.reward / 2
 
     if (showResult) {
         ResultScreen(
             emoji = "🔑",
             title = "암호 해독 성공!",
             body = "정답: ${codeTag.answer}",
-            amount = codeTag.reward,
+            amount = currentReward,
+            onClose = onBack
+        )
+        return
+    }
+
+    if (showFailed) {
+        ResultScreen(
+            emoji = "❌",
+            title = "암호 해독 실패",
+            body = "기회를 모두 사용했습니다.\n정답: ${codeTag.answer}",
+            amount = 0,
             onClose = onBack
         )
         return
@@ -93,10 +107,16 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    "보상: ${codeTag.reward} 달란트",
+                    "보상: $currentReward 달란트" + if (attemptsLeft < 2) "  (첫 번째 오답으로 절반 감소)" else "",
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = if (attemptsLeft < 2) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "남은 기회: $attemptsLeft / 2",
+                    fontSize = 13.sp,
+                    color = if (attemptsLeft == 1) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -106,15 +126,12 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         // 암호 입력
         OutlinedTextField(
             value = input,
-            onValueChange = {
-                input = it.uppercase()
-                wrongAttempt = false
-            },
+            onValueChange = { input = it.uppercase() },
             label = { Text("암호 입력") },
             placeholder = { Text("찾은 암호를 입력하세요") },
-            isError = wrongAttempt,
-            supportingText = if (wrongAttempt) {
-                { Text("틀렸습니다. 다시 찾아보세요!", color = MaterialTheme.colorScheme.error) }
+            isError = attemptsLeft < 2,
+            supportingText = if (attemptsLeft == 1) {
+                { Text("틀렸습니다! 마지막 기회 — 보상이 절반으로 줄었습니다", color = MaterialTheme.colorScheme.error) }
             } else null,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -131,11 +148,16 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             onClick = {
                 keyboard?.hide()
                 if (input.trim() == codeTag.answer) {
-                    vm.addTalant(codeTag.reward)
+                    vm.addTalant(currentReward)
                     vm.markTagUsed("CODE_$tagId")
                     showResult = true
                 } else {
-                    wrongAttempt = true
+                    attemptsLeft--
+                    input = ""
+                    if (attemptsLeft <= 0) {
+                        vm.markTagUsed("CODE_$tagId")
+                        showFailed = true
+                    }
                 }
             },
             enabled = input.isNotBlank(),
@@ -143,7 +165,11 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 .fillMaxWidth()
                 .height(52.dp)
         ) {
-            Text("암호 제출", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(
+                if (attemptsLeft == 1) "마지막 기회로 제출" else "암호 제출",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
 
         Spacer(Modifier.height(12.dp))
