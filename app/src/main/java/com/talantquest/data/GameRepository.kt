@@ -19,8 +19,5 @@ class GameRepository(context: Context) {
     fun isTagUsed(tagId: String): Boolean = prefs.getBoolean("used_$tagId", false)
     fun markTagUsed(tagId: String) = prefs.edit().putBoolean("used_$tagId", true).apply()
 
-    fun getTtsVolume(): Float = prefs.getFloat("tts_volume", 1.0f)
-    fun setTtsVolume(v: Float) = prefs.edit().putFloat("tts_volume", v).apply()
-
     fun resetAll() = prefs.edit().clear().apply()
 }

@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.talantquest.data.GameData
+import com.talantquest.data.QuizQuestion
 import com.talantquest.nfc.NfcWriteController
 import com.talantquest.nfc.WriteResult
 
@@ -36,8 +37,8 @@ fun AdminScreen(
     val owner = LocalLifecycleOwner.current
 
     val types = listOf(
-        TagTypeInfo("QUIZ", "퀴즈", 10),
-        TagTypeInfo("CODE", "암호", 10),
+        TagTypeInfo("QUIZ", "퀴즈", GameData.quizTags.size),
+        TagTypeInfo("CODE", "암호", GameData.codeTags.size),
         TagTypeInfo("INVEST", "투자", null),
         TagTypeInfo("EVENT", "이벤트", null),
     )
@@ -322,16 +323,44 @@ private fun TagContentPreview(typeCode: String, number: Int) {
                     if (tag != null) {
                         tag.questions.forEachIndexed { i, q ->
                             Text("Q${i + 1}. ${q.question}", fontSize = 12.sp, fontWeight = FontWeight.Medium)
-                            q.options.forEachIndexed { oi, opt ->
-                                val marker = if (oi == q.correctIndex) "✓" else "·"
-                                Text(
-                                    "   $marker $opt",
-                                    fontSize = 11.sp,
-                                    color = if (oi == q.correctIndex)
-                                        MaterialTheme.colorScheme.primary
-                                    else
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                            if (q.imageRes != null) {
+                                Text("   🖼 (이미지 포함)", fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            when (q) {
+                                is QuizQuestion.MultipleChoice ->
+                                    q.options.forEachIndexed { oi, opt ->
+                                        val marker = if (oi == q.correctIndex) "✓" else "·"
+                                        Text(
+                                            "   $marker $opt",
+                                            fontSize = 11.sp,
+                                            color = if (oi == q.correctIndex)
+                                                MaterialTheme.colorScheme.primary
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                is QuizQuestion.ShortAnswer -> {
+                                    Text(
+                                        "   ✓ ${q.answers.joinToString(" / ")} (주관식)",
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    if (q.hints.isNotEmpty()) {
+                                        Text(
+                                            "   💡 힌트 ${q.hints.size}단계",
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    if (q.explanation != null) {
+                                        Text(
+                                            "   📖 해설 있음",
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
                             }
                             if (i < tag.questions.lastIndex) Spacer(Modifier.height(6.dp))
                         }

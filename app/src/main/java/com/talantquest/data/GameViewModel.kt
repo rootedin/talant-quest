@@ -1,7 +1,6 @@
 package com.talantquest.data
 
 import android.content.Context
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,18 +10,14 @@ class GameViewModel(private val repo: GameRepository) : ViewModel() {
 
     val teamName = mutableStateOf(repo.getTeamName())
     val talant = mutableIntStateOf(repo.getTalant())
-    val ttsVolume = mutableFloatStateOf(repo.getTtsVolume())
-
-    fun setTtsVolume(v: Float) {
-        ttsVolume.floatValue = v
-        repo.setTtsVolume(v)
-    }
 
     // 태그 사용 상태가 바뀔 때마다 증가 → 진행도 UI 갱신용
     val tagsVersion = mutableIntStateOf(0)
 
     val totalQuiz = GameData.quizTags.size
     val totalCode = GameData.codeTags.size
+    val totalEvent = GameData.eventTagIds.size
+    val totalInvest = GameData.investTagIds.size
 
     fun hasTeam(): Boolean = repo.hasTeamName()
 
@@ -45,6 +40,8 @@ class GameViewModel(private val repo: GameRepository) : ViewModel() {
 
     fun quizFound(): Int = GameData.quizTags.count { repo.isTagUsed("QUIZ_${it.id}") }
     fun codeFound(): Int = GameData.codeTags.count { repo.isTagUsed("CODE_${it.id}") }
+    fun eventFound(): Int = GameData.eventTagIds.count { repo.isTagUsed("EVENT_$it") }
+    fun investFound(): Int = GameData.investTagIds.count { repo.isTagUsed("INVEST_$it") }
 
     fun resetGame() {
         repo.resetAll()

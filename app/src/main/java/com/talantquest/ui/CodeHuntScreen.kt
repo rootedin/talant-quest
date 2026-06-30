@@ -64,11 +64,11 @@ fun CodeHuntScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("🔍", fontSize = 36.sp)
+            Text("🔍", fontSize = 24.sp)
             Spacer(Modifier.width(8.dp))
             Text(
                 "암호 찾기 #$tagId",
-                fontSize = 27.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )

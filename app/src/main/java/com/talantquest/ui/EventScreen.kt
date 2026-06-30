@@ -77,21 +77,23 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             Text(
                 event.description,
                 fontSize = 33.sp,
+                lineHeight = 48.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
 
             Text(
                 event.flavor,
                 fontSize = 21.sp,
+                lineHeight = 32.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(40.dp))
 
             val amountText = if (isGain) "+${event.amount}" else "${event.amount}"
             Text(
@@ -109,7 +111,7 @@ fun EventScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(56.dp))
 
             Button(
                 onClick = onBack,

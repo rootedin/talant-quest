@@ -1,6 +1,8 @@
 package com.talantquest.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,11 +45,11 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("📈", fontSize = 36.sp)
+            Text("📈", fontSize = 24.sp)
             Spacer(Modifier.width(8.dp))
             Text(
                 "투자 태그",
-                fontSize = 27.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -70,9 +72,9 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 ) {
                     Text("현재 달란트", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
-                        "💰 $currentTalant",
+                        "🟡 $currentTalant",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 27.sp,
+                        fontSize = 22.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -86,7 +88,7 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                     Text(
                         "🎯 50%",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
+                        fontSize = 22.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }
@@ -103,6 +105,12 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
         )
         Spacer(Modifier.height(8.dp))
 
+        // 카드·요약만 스크롤 → 하단 버튼은 항상 화면에 고정
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
         GameData.investOptions.forEachIndexed { i, opt ->
             val selected = selectedOption == i
             val canAfford = currentTalant >= opt.betAmount
@@ -120,75 +128,56 @@ fun InvestScreen(vm: GameViewModel, tagId: String, onBack: () -> Unit) {
                 ),
                 border = if (selected) CardDefaults.outlinedCardBorder() else null
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(14.dp)
                 ) {
-                    Column {
-                        Text(
-                            "${opt.emoji} ${opt.name}",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
-                            else MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            opt.description,
-                            fontSize = 17.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        "${opt.emoji} ${opt.name}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
+                        else MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        opt.description,
+                        fontSize = 17.sp,
+                        lineHeight = 26.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(
                             "${opt.betAmount} 달란트",
-                            fontSize = 27.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
                             else MaterialTheme.colorScheme.primary
                         )
                         Text(
                             "성공 시 × 2",
-                            fontSize = 17.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            softWrap = false,
                             color = if (!canAfford) MaterialTheme.colorScheme.onSurfaceVariant
                             else MaterialTheme.colorScheme.tertiary
                         )
                         if (!canAfford) {
-                            Text("달란트 부족", fontSize = 15.sp, color = MaterialTheme.colorScheme.error)
+                            Text("달란트 부족", fontSize = 14.sp, color = MaterialTheme.colorScheme.error)
                         }
                     }
                 }
             }
         }
 
-        Spacer(Modifier.weight(1f))
+        } // 스크롤 영역 끝
 
-        if (selectedOption >= 0) {
-            val opt = GameData.investOptions[selectedOption]
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        "성공 시 +${opt.betAmount}달란트 (합계 ${currentTalant + opt.betAmount})",
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                    Text(
-                        "실패 시 -${opt.betAmount}달란트 (합계 ${currentTalant - opt.betAmount})",
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-        }
+        Spacer(Modifier.height(12.dp))
 
         Button(
             onClick = {

@@ -64,7 +64,10 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
     vm.tagsVersion.intValue
     val quizFound = vm.quizFound()
     val codeFound = vm.codeFound()
-    val allFound = quizFound == vm.totalQuiz && codeFound == vm.totalCode
+    val eventFound = vm.eventFound()
+    val investFound = vm.investFound()
+    val allFound = quizFound == vm.totalQuiz && codeFound == vm.totalCode &&
+        eventFound == vm.totalEvent && investFound == vm.totalInvest
 
     val nfcStatus = rememberNfcStatus()
 
@@ -101,19 +104,18 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
                     .padding(28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("보유 달란트", fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("보유 달란트 🟡", fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "💰 $animatedTalant",
+                    "$animatedTalant",
                     fontSize = 64.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text("달란트", fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(24.dp))
 
         // 수집 진행도
         Card(
@@ -128,10 +130,14 @@ fun MainScreen(vm: GameViewModel, onAdmin: () -> Unit) {
                     color = if (allFound) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(20.dp))
                 ProgressRow("❓ 퀴즈", quizFound, vm.totalQuiz)
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(18.dp))
                 ProgressRow("🔑 암호", codeFound, vm.totalCode)
+                Spacer(Modifier.height(18.dp))
+                ProgressRow("🎉 이벤트", eventFound, vm.totalEvent)
+                Spacer(Modifier.height(18.dp))
+                ProgressRow("📈 투자", investFound, vm.totalInvest)
             }
         }
 
@@ -175,12 +181,13 @@ private fun ProgressRow(label: String, found: Int, total: Int) {
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(10.dp))
         LinearProgressIndicator(
             progress = { if (total == 0) 0f else found.toFloat() / total },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(8.dp),
             color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            drawStopIndicator = {}
         )
     }
 }

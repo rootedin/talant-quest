@@ -22,9 +22,10 @@ fun ErrorScreen(message: String, onBack: () -> Unit) {
         Text("❌", fontSize = 56.sp)
         Spacer(Modifier.height(16.dp))
         Text("오류", fontSize = 33.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
-        Text(message, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Text(message, fontSize = 21.sp, lineHeight = 32.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(40.dp))
         Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(72.dp)) {
             Text("돌아가기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
@@ -42,9 +43,10 @@ fun UsedTagScreen(message: String, onBack: () -> Unit) {
         Spacer(Modifier.height(16.dp))
         Text("이미 사용됨", fontSize = 33.sp, fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(message, fontSize = 21.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Text(message, fontSize = 21.sp, lineHeight = 32.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(40.dp))
         Button(onClick = onBack, modifier = Modifier.fillMaxWidth().height(72.dp)) {
             Text("돌아가기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
@@ -70,12 +72,12 @@ fun ResultScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(emoji, fontSize = 72.sp)
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(28.dp))
             Text(title, fontSize = 36.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-            Spacer(Modifier.height(8.dp))
-            Text(body, fontSize = 22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center)
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(16.dp))
+            Text(body, fontSize = 22.sp, lineHeight = 34.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(40.dp))
             val sign = if (amount > 0) "+" else ""
             Text(
                 "$sign$amount 달란트",
