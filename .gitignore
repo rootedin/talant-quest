@@ -16,6 +16,11 @@ local.properties
 .DS_Store
 Thumbs.db
 
-# 서명 키 (비밀 정보 — 커밋 금지)
+# 서명 키 (비밀 정보 — 커밋 금지). 별도로 안전하게 백업할 것.
 *.jks
 *.keystore
+keystore.properties
+
+# 빌드 산출물
+*.apk
+*.aab
